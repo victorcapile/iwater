@@ -101,7 +101,9 @@ export function HistoryPage() {
         })
       } else {
         toast.success(`${formatInteger(result.entries)} registros importados`, {
-          description: `Distribuídos em ${result.days} ${result.days === 1 ? 'dia' : 'dias'}.`,
+          description: `Distribuídos em ${result.days} ${result.days === 1 ? 'dia' : 'dias'}.${
+            result.house ? ' Perfil, leituras e contas também foram importados.' : ''
+          }`,
         })
       }
     } catch {
@@ -237,8 +239,9 @@ export function HistoryPage() {
               Seus dados
             </h2>
             <p className="mt-1 max-w-xl text-xs leading-relaxed text-navy/55">
-              O iWater guarda tudo somente neste navegador. Exporte um backup para não
-              perder seus registros ao limpar o navegador ou trocar de dispositivo.
+              O iWater guarda tudo somente neste navegador. O backup inclui o histórico,
+              o perfil da casa, as leituras do hidrômetro e as contas de água. Exporte
+              para não perder os dados ao limpar o navegador ou trocar de dispositivo.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <button type="button" className="btn-secondary" onClick={handleExport}>
@@ -296,7 +299,7 @@ export function HistoryPage() {
       <ConfirmDialog
         open={confirmClear}
         title="Apagar todos os dados?"
-        description="Todo o histórico será removido deste navegador. Se quiser guardar uma cópia, cancele e exporte um backup antes."
+        description="Todo o histórico, o perfil da casa, as leituras do hidrômetro e as contas de água serão removidos deste navegador. Se quiser guardar uma cópia, cancele e exporte um backup antes."
         confirmLabel="Apagar tudo"
         destructive
         onConfirm={() => {

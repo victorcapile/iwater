@@ -9,6 +9,12 @@ import {
   removeEntry,
   restoreEntry,
 } from './storage'
+import {
+  addMeterReading,
+  clearHouseData,
+  getMeterReadings,
+  saveBill,
+} from './house'
 
 const entry = (tipo: string, gasto: number) => ({ tipo, gasto })
 
@@ -63,6 +69,22 @@ describe('armazenamento local', () => {
 
     expect(importBackup(backup).entries).toBe(0)
     expect(getDays()[0].entries).toHaveLength(1)
+  })
+
+  it('inclui e restaura os dados da casa no backup', () => {
+    addEntry('2026-11-09', entry('Banho', 90))
+    addMeterReading({ date: '2026-11-09', reading: 123.456 })
+    saveBill({ month: '2026-11', consumptionM3: 10, totalBRL: 100 })
+
+    const backup = JSON.stringify(createBackup())
+    expect(JSON.parse(backup).house.readings).toHaveLength(1)
+
+    clearHouseData()
+    expect(getMeterReadings()).toHaveLength(0)
+
+    const result = importBackup(backup)
+    expect(result.house).toBe(true)
+    expect(getMeterReadings()).toHaveLength(1)
   })
 
   it('importa backup de outro dispositivo', () => {

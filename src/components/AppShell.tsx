@@ -61,11 +61,14 @@ export function AppShell() {
         <div className="flex flex-col gap-3 text-xs text-navy/55 sm:flex-row sm:items-center sm:justify-between">
           <p>iWater · uma ideia de 2013, repensada para hoje.</p>
           <nav className="flex flex-wrap items-center gap-x-4 gap-y-2" aria-label="Links do rodapé">
-            <Link className="transition hover:text-navy" to="/sobre">
-              Sobre
+            <Link className="transition hover:text-navy" to="/minha-casa">
+              Minha casa
             </Link>
             <Link className="transition hover:text-navy" to="/historico">
               Histórico
+            </Link>
+            <Link className="transition hover:text-navy" to="/sobre">
+              Sobre
             </Link>
             <a
               className="transition hover:text-navy"

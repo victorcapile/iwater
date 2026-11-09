@@ -108,10 +108,15 @@ export function parseDuration(value: string): number | null {
   return null
 }
 
-export function getStatus(total: number, hasEntries = true): ConsumptionStatus {
+export function getStatus(
+  total: number,
+  hasEntries = true,
+  idealLiters = IDEAL_LITERS,
+  alertLiters = ALERT_LITERS,
+): ConsumptionStatus {
   if (!hasEntries || total <= 0) return 'sem-registro'
-  if (total <= IDEAL_LITERS) return 'ideal'
-  if (total <= ALERT_LITERS) return 'atencao'
+  if (total <= idealLiters) return 'ideal'
+  if (total <= alertLiters) return 'atencao'
   return 'acima'
 }
 
@@ -119,11 +124,15 @@ export function getStatus(total: number, hasEntries = true): ConsumptionStatus {
  * O boneco do gráfico muda de pose conforme o consumo — identidade visual
  * preservada do projeto original.
  */
-export function getGaugeImage(total: number): string {
-  if (total > ALERT_LITERS) {
+export function getGaugeImage(
+  total: number,
+  idealLiters = IDEAL_LITERS,
+  alertLiters = ALERT_LITERS,
+): string {
+  if (total > alertLiters) {
     return `${import.meta.env.BASE_URL}img/grafico-alerta-vermelho.png`
   }
-  if (total > IDEAL_LITERS) {
+  if (total > idealLiters) {
     return `${import.meta.env.BASE_URL}img/grafico-alerta.png`
   }
   return `${import.meta.env.BASE_URL}img/grafico.png`

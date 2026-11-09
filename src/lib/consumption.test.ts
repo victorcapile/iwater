@@ -92,4 +92,11 @@ describe('getStatus', () => {
     expect(getStatus(ALERT_LITERS, true)).toBe('atencao')
     expect(getStatus(ALERT_LITERS + 1, true)).toBe('acima')
   })
+
+  it('aceita metas proporcionais ao perfil da casa', () => {
+    expect(getStatus(240, true, 240, 300)).toBe('ideal')
+    expect(getStatus(241, true, 240, 300)).toBe('atencao')
+    expect(getStatus(300, true, 240, 300)).toBe('atencao')
+    expect(getStatus(301, true, 240, 300)).toBe('acima')
+  })
 })

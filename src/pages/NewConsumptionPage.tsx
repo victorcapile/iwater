@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CalendarDays,
   Clock,
@@ -16,6 +16,8 @@ import { toast } from 'sonner'
 import { PageHeader } from '../components/PageHeader'
 import { domesticActivities, type Activity } from '../data/activities'
 import { curiosities } from '../data/curiosities'
+import { useHouseData } from '../hooks/useHouseData'
+import { getHouseAlert, getHouseGoal } from '../lib/houseMath'
 import {
   calcConsumption,
   formatDuration,
@@ -23,7 +25,7 @@ import {
   getDefaultSeconds,
   parseDuration,
 } from '../lib/consumption'
-import { formatLiters, formatDateFull, todayKey } from '../lib/format'
+import { formatInteger, formatLiters, formatDateFull, todayKey } from '../lib/format'
 import { addEntry } from '../lib/storage'
 
 function referenceLabel(activity: Activity): string {
@@ -65,6 +67,9 @@ function quickOptions(activity: Activity): Array<{ label: string; seconds: numbe
 
 export function NewConsumptionPage() {
   const navigate = useNavigate()
+  const house = useHouseData()
+  const houseGoal = getHouseGoal(house.profile)
+  const houseAlert = getHouseAlert(house.profile)
   const [activityId, setActivityId] = useState('')
   const [duration, setDuration] = useState('')
   const [date, setDate] = useState(todayKey())
@@ -348,14 +353,26 @@ export function NewConsumptionPage() {
             </p>
             <dl className="mt-4 space-y-2 text-xs">
               <div className="flex items-center justify-between gap-3">
-                <dt className="text-navy/55">Meta ideal</dt>
-                <dd className="font-semibold text-ideal">120 L / dia</dd>
+                <dt className="text-navy/55">Meta da casa</dt>
+                <dd className="font-semibold text-ideal">
+                  {formatInteger(houseGoal)} L / dia
+                </dd>
               </div>
               <div className="flex items-center justify-between gap-3">
                 <dt className="text-navy/55">Alerta</dt>
-                <dd className="font-semibold text-warning">150 L / dia</dd>
+                <dd className="font-semibold text-warning">
+                  {formatInteger(houseAlert)} L / dia
+                </dd>
               </div>
             </dl>
+            <p className="mt-3 text-[0.7rem] leading-relaxed text-navy/50">
+              Para {house.profile.residents}{' '}
+              {house.profile.residents === 1 ? 'pessoa' : 'pessoas'} ×{' '}
+              {house.profile.goalPerPerson} L.{' '}
+              <Link to="/minha-casa" className="font-semibold text-agua-800 underline-offset-2 hover:underline">
+                Ajustar em Minha casa
+              </Link>
+            </p>
           </section>
 
           <section className="surface p-5">

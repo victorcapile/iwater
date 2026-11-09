@@ -17,10 +17,20 @@ const bubbles = [
 interface WaterGaugeProps {
   total: number
   hasEntries: boolean
+  idealLiters?: number
+  alertLiters?: number
+  maxLiters?: number
 }
 
-export function WaterGauge({ total, hasEntries }: WaterGaugeProps) {
-  const target = Math.min(100, Math.max(0, (total / MAX_LITERS) * 100))
+export function WaterGauge({
+  total,
+  hasEntries,
+  idealLiters = IDEAL_LITERS,
+  alertLiters = ALERT_LITERS,
+  maxLiters = MAX_LITERS,
+}: WaterGaugeProps) {
+  const safeMax = Math.max(1, maxLiters)
+  const target = Math.min(100, Math.max(0, (total / safeMax) * 100))
   const [level, setLevel] = useState(0)
 
   useEffect(() => {
@@ -28,16 +38,16 @@ export function WaterGauge({ total, hasEntries }: WaterGaugeProps) {
     return () => cancelAnimationFrame(frame)
   }, [target])
 
-  const idealBottom = (IDEAL_LITERS / MAX_LITERS) * 100
-  const alertBottom = (ALERT_LITERS / MAX_LITERS) * 100
+  const idealBottom = (idealLiters / safeMax) * 100
+  const alertBottom = (alertLiters / safeMax) * 100
 
   return (
     <div className="relative">
-      <div className="mx-auto w-fit rounded-[2rem] bg-agua-400 p-3 shadow-inner sm:p-4">
+      <div className="mx-auto w-fit rounded-[2rem] bg-agua-400 p-3 shadow-inner ring-1 ring-white/25 sm:p-4">
         <div
           className="gauge"
           role="img"
-          aria-label={`Consumo de ${formatLiters(total)} litros no dia. Meta ideal de ${IDEAL_LITERS} litros e alerta em ${ALERT_LITERS} litros.`}
+          aria-label={`Consumo de ${formatLiters(total)} litros no dia. Meta ideal de ${formatLiters(idealLiters)} litros e alerta em ${formatLiters(alertLiters)} litros.`}
         >
           <div className="gauge-water" style={{ height: `${level}%` }}>
             <div className="gauge-water-inner" aria-hidden="true">
@@ -59,17 +69,21 @@ export function WaterGauge({ total, hasEntries }: WaterGaugeProps) {
           </div>
 
           <img
-            src={getGaugeImage(hasEntries ? total : 0)}
+            src={getGaugeImage(hasEntries ? total : 0, idealLiters, alertLiters)}
             alt=""
             className="gauge-image"
             aria-hidden="true"
           />
 
           <div className="gauge-line text-[#8a1c1c]" style={{ bottom: `${idealBottom}%` }}>
-            <span className="gauge-line-label text-[#8a1c1c]">ideal {IDEAL_LITERS} L</span>
+            <span className="gauge-line-label text-[#8a1c1c]">
+              ideal {formatLiters(idealLiters)} L
+            </span>
           </div>
           <div className="gauge-line text-warning" style={{ bottom: `${alertBottom}%` }}>
-            <span className="gauge-line-label text-warning">alerta {ALERT_LITERS} L</span>
+            <span className="gauge-line-label text-warning">
+              alerta {formatLiters(alertLiters)} L
+            </span>
           </div>
 
           <div className="gauge-total rounded-2xl border border-white/60 bg-white/70 px-3 py-2 shadow-sm backdrop-blur-sm">

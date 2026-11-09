@@ -1,3 +1,10 @@
+import {
+  clearHouseData,
+  getHouseData,
+  mergeHouseData,
+  type HouseData,
+} from './house'
+
 export interface ConsumptionEntry {
   /** Nome da atividade, mantido no mesmo formato do projeto original. */
   tipo: string
@@ -182,28 +189,32 @@ export function clearAllData(): void {
   allKeys()
     .filter(isDateKey)
     .forEach((key) => removeItem(key))
+  clearHouseData()
   notify()
 }
 
 export interface BackupData {
   app: 'iWater'
-  version: 2
+  version: 3
   exportedAt: string
   days: Record<string, ConsumptionEntry[]>
+  house: HouseData
 }
 
 export function createBackup(): BackupData {
   return {
     app: 'iWater',
-    version: 2,
+    version: 3,
     exportedAt: new Date().toISOString(),
     days: Object.fromEntries(getDays().map((day) => [day.date, day.entries])),
+    house: getHouseData(),
   }
 }
 
 export interface ImportResult {
   days: number
   entries: number
+  house: boolean
 }
 
 /** Importa um backup e mescla com os dados atuais sem duplicar entradas idênticas. */
@@ -227,6 +238,18 @@ export function importBackup(raw: string): ImportResult {
 
   let importedDays = 0
   let importedEntries = 0
+  let importedHouse = false
+
+  if (
+    parsed &&
+    typeof parsed === 'object' &&
+    'house' in parsed &&
+    parsed.house &&
+    typeof parsed.house === 'object'
+  ) {
+    const result = mergeHouseData(parsed.house)
+    importedHouse = result.profile || result.readings > 0 || result.bills > 0
+  }
 
   for (const [date, value] of Object.entries(days)) {
     if (!isDateKey(date)) continue
@@ -252,7 +275,7 @@ export function importBackup(raw: string): ImportResult {
   }
 
   notify()
-  return { days: importedDays, entries: importedEntries }
+  return { days: importedDays, entries: importedEntries, house: importedHouse }
 }
 
 type Listener = () => void

@@ -104,7 +104,10 @@ export function AboutPage() {
                 <li>Interface responsiva e acessível, com foco em leitura no celular.</li>
                 <li>Cálculo e armazenamento 100% locais, sem enviar dados para servidores.</li>
                 <li>Gráfico do boneco d'água preservado e evolução dos últimos 7 dias.</li>
-                <li>Backup dos registros em JSON para exportar e importar.</li>
+                <li>Perfil da casa e meta por pessoa, com alerta proporcional.</li>
+                <li>Leituras do hidrômetro para medir o consumo real.</li>
+                <li>Conta de água em reais, tarifa por m³ e projeção do mês.</li>
+                <li>Backup completo dos registros em JSON para exportar e importar.</li>
                 <li>Cronômetro integrado para medir banhos, torneiras e descargas.</li>
                 <li>Instalação como aplicativo (PWA) e uso offline.</li>
               </ul>

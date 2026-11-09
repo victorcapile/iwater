@@ -12,7 +12,17 @@ import type { DayRecord } from '../lib/storage'
 import { ALERT_LITERS, IDEAL_LITERS } from '../lib/consumption'
 import { formatChartLabel, formatLiters, lastDays } from '../lib/format'
 
-export function TrendChart({ days }: { days: DayRecord[] }) {
+interface TrendChartProps {
+  days: DayRecord[]
+  idealLiters?: number
+  alertLiters?: number
+}
+
+export function TrendChart({
+  days,
+  idealLiters = IDEAL_LITERS,
+  alertLiters = ALERT_LITERS,
+}: TrendChartProps) {
   const totalByDate = new Map(days.map((day) => [day.date, day.total]))
   const data = lastDays(7).map((date) => ({
     date,
@@ -53,24 +63,24 @@ export function TrendChart({ days }: { days: DayRecord[] }) {
               labelFormatter={(label) => `Dia ${label}`}
             />
             <ReferenceLine
-              y={IDEAL_LITERS}
+              y={idealLiters}
               stroke="#8a1c1c"
               strokeDasharray="5 4"
               ifOverflow="extendDomain"
               label={{
-                value: `ideal ${IDEAL_LITERS} L`,
+                value: `ideal ${formatLiters(idealLiters)} L`,
                 position: 'insideTopRight',
                 fill: '#8a1c1c',
                 fontSize: 10,
               }}
             />
             <ReferenceLine
-              y={ALERT_LITERS}
+              y={alertLiters}
               stroke="#b45309"
               strokeDasharray="5 4"
               ifOverflow="extendDomain"
               label={{
-                value: `alerta ${ALERT_LITERS} L`,
+                value: `alerta ${formatLiters(alertLiters)} L`,
                 position: 'insideTopRight',
                 fill: '#b45309',
                 fontSize: 10,

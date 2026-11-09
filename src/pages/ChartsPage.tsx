@@ -14,13 +14,10 @@ import { StatusBadge } from '../components/StatusBadge'
 import { TrendChart } from '../components/TrendChart'
 import { WaterGauge } from '../components/WaterGauge'
 import { useConsumptionDays } from '../hooks/useConsumptionDays'
+import { useHouseData } from '../hooks/useHouseData'
 import { footprintFacts } from '../data/activities'
-import {
-  ALERT_LITERS,
-  IDEAL_LITERS,
-  formatDurationHuman,
-  getStatus,
-} from '../lib/consumption'
+import { formatDurationHuman, getStatus } from '../lib/consumption'
+import { getHouseAlert, getHouseGoal, getHouseMax } from '../lib/houseMath'
 import {
   formatDateFull,
   formatDateLong,
@@ -30,6 +27,10 @@ import {
 
 export function ChartsPage() {
   const days = useConsumptionDays()
+  const house = useHouseData()
+  const goal = getHouseGoal(house.profile)
+  const alert = getHouseAlert(house.profile)
+  const max = getHouseMax(house.profile)
 
   const [selectedDate, setSelectedDate] = useSelectedDay(days)
   const selectedDay = days.find((day) => day.date === selectedDate) ?? days[0]
@@ -40,7 +41,7 @@ export function ChartsPage() {
         <PageHeader
           icon={ChartNoAxesCombined}
           title="Gráficos"
-          description="Veja seu consumo em litros, compare com as metas e acompanhe a evolução dos últimos dias."
+          description="Veja o consumo estimado pelas atividades, compare com as metas da casa e acompanhe a evolução dos últimos dias."
         />
         <EmptyState
           icon={ChartNoAxesCombined}
@@ -57,7 +58,12 @@ export function ChartsPage() {
     )
   }
 
-  const status = getStatus(selectedDay.total, selectedDay.entries.length > 0)
+  const status = getStatus(
+    selectedDay.total,
+    selectedDay.entries.length > 0,
+    goal,
+    alert,
+  )
   const sortedEntries = selectedDay.entries
     .map((entry, index) => ({ entry, index }))
     .sort((a, b) => b.entry.gasto - a.entry.gasto)
@@ -65,17 +71,17 @@ export function ChartsPage() {
 
   const statusMessage =
     status === 'ideal'
-      ? `Dentro da meta ideal de ${IDEAL_LITERS} litros por dia.`
+      ? `Dentro da meta da casa de ${formatLiters(goal)} litros por dia.`
       : status === 'atencao'
-        ? `Passou da meta ideal, mas ainda está abaixo do alerta de ${ALERT_LITERS} litros.`
-        : `Acima do alerta de ${ALERT_LITERS} litros. Vale revisar banhos, torneiras e descargas.`
+        ? `Passou da meta de ${formatLiters(goal)} litros, mas ainda está abaixo do alerta de ${formatLiters(alert)} litros.`
+        : `Acima do alerta de ${formatLiters(alert)} litros. Vale revisar banhos, torneiras e descargas.`
 
   return (
     <div>
       <PageHeader
         icon={ChartNoAxesCombined}
         title="Gráficos"
-        description="Veja seu consumo em litros, compare com as metas e acompanhe a evolução dos últimos dias."
+        description="Veja o consumo estimado pelas atividades, compare com as metas da casa e acompanhe a evolução dos últimos dias."
       />
 
       <div className="surface mb-4 flex flex-wrap items-center justify-between gap-3 p-4">
@@ -98,7 +104,13 @@ export function ChartsPage() {
 
       <section className="surface mb-4 p-5 sm:p-6">
         <div className="grid gap-6 md:grid-cols-[minmax(0,19rem)_1fr] md:items-center">
-          <WaterGauge total={selectedDay.total} hasEntries={selectedDay.entries.length > 0} />
+          <WaterGauge
+            total={selectedDay.total}
+            hasEntries={selectedDay.entries.length > 0}
+            idealLiters={goal}
+            alertLiters={alert}
+            maxLiters={max}
+          />
 
           <div>
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -108,6 +120,9 @@ export function ChartsPage() {
                   {formatLiters(selectedDay.total)}{' '}
                   <span className="text-sm font-normal text-navy/50">litros</span>
                 </h2>
+                <p className="mt-0.5 text-[0.68rem] text-navy/45">
+                  estimativa pelas atividades registradas
+                </p>
               </div>
               <StatusBadge status={status} />
             </div>
@@ -115,18 +130,27 @@ export function ChartsPage() {
 
             <div className="mt-5 grid grid-cols-2 gap-2">
               <div className="stat-card">
-                <p className="stat-label">Meta ideal</p>
+                <p className="stat-label">Meta da casa</p>
                 <p className="mt-1 text-xl font-light">
-                  {IDEAL_LITERS} <span className="text-xs font-normal text-navy/45">L</span>
+                  {formatLiters(goal)}{' '}
+                  <span className="text-xs font-normal text-navy/45">L</span>
                 </p>
               </div>
               <div className="stat-card">
                 <p className="stat-label">Alerta</p>
                 <p className="mt-1 text-xl font-light">
-                  {ALERT_LITERS} <span className="text-xs font-normal text-navy/45">L</span>
+                  {formatLiters(alert)}{' '}
+                  <span className="text-xs font-normal text-navy/45">L</span>
                 </p>
               </div>
             </div>
+            <Link
+              to="/minha-casa"
+              className="mt-3 inline-flex text-[0.7rem] font-semibold text-agua-800 underline-offset-2 hover:underline"
+            >
+              Meta para {house.profile.residents}{' '}
+              {house.profile.residents === 1 ? 'pessoa' : 'pessoas'} · ajustar em Minha casa
+            </Link>
 
             <div className="mt-5">
               <h3 className="text-xs font-semibold tracking-[0.14em] text-navy/55 uppercase">
@@ -177,7 +201,7 @@ export function ChartsPage() {
             {days.length === 1 ? 'dia registrado' : 'dias registrados'}
           </p>
         </div>
-        <TrendChart days={days} />
+        <TrendChart days={days} idealLiters={goal} alertLiters={alert} />
       </section>
 
       <section className="surface p-5 sm:p-6" aria-labelledby="pegada-titulo">

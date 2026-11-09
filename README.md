@@ -16,8 +16,11 @@ enche d'água e a gota das curiosidades — com uma base técnica atual.
 - **Lucide** para os ícones e **Sonner** para as mensagens de sucesso/erro.
 - **date-fns** para datas em português, com o dia local correto (o original usava UTC).
 - **PWA** com `vite-plugin-pwa`: dá para instalar na tela de início e usar offline.
-- **Backup em JSON** para exportar e importar os registros.
-- **Validação e testes** com Vitest para o cálculo de consumo e o armazenamento.
+- **Perfil da casa**: moradores, meta por pessoa, tipo de moradia, jardim e piscina.
+- **Leituras do hidrômetro**: consumo real em m³, médias por período e projeção.
+- **Conta de água em reais**: consumo, total, tarifa efetiva por m³ e resumo mensal.
+- **Backup completo em JSON** com histórico, perfil, leituras e contas.
+- **Validação e testes** com Vitest para cálculos, armazenamento e dados da casa.
 - Acessibilidade: navegação por teclado, foco visível, textos alternativos, contraste e
   respeito a `prefers-reduced-motion`.
 
@@ -45,10 +48,11 @@ npm test         # roda os testes
 ```text
 src/
   components/       AppShell, cabeçalho, gráfico do boneco, ícones, diálogos...
+  components/house/ formulários de perfil, hidrômetro, conta e resumo mensal
   data/             atividades e curiosidades preservadas do projeto original
-  hooks/            leitura reativa do histórico
-  lib/              cálculo de consumo, armazenamento e formatação
-  pages/            início, novo consumo, histórico, gráficos, curiosidades e sobre
+  hooks/            leitura reativa do histórico e dos dados da casa
+  lib/              consumo, casa, armazenamento, cálculos e formatação
+  pages/            início, minha casa, novo consumo, histórico, gráficos...
   App.tsx           rotas
   index.css         tema, identidade visual e componentes
 public/
@@ -59,17 +63,26 @@ public/
 
 ## Dados e privacidade
 
-Os registros ficam no `localStorage` do navegador, com a mesma estrutura da versão
-original: uma chave por dia no formato `AAAA-MM-DD` e uma lista de consumos
-(`tipo`, `gasto`, `duracao` etc.). Nada é enviado para servidores.
+Os registros ficam no `localStorage` do navegador. O histórico mantém a mesma estrutura
+da versão original: uma chave por dia no formato `AAAA-MM-DD` e uma lista de consumos
+(`tipo`, `gasto`, `duracao` etc.). Os dados da casa usam chaves próprias:
+
+- `iwater:profile:v1` — perfil e meta da casa;
+- `iwater:meter-readings:v1` — leituras acumuladas do hidrômetro;
+- `iwater:bills:v1` — contas mensais de água.
+
+Nada é enviado para servidores.
 
 Na página **Histórico** é possível:
 
 - remover um consumo individual (com opção de desfazer);
 - excluir um dia inteiro;
-- exportar um backup `iwater-backup-AAAA-MM-DD.json`;
+- exportar um backup `iwater-backup-AAAA-MM-DD.json` (inclui perfil, leituras e contas);
 - importar um backup e mesclar os registros sem duplicar consumos idênticos;
 - apagar todos os dados locais.
+
+Na página **Minha casa** é possível ajustar o perfil, registrar leituras do hidrômetro,
+cadastrar contas mensais e acompanhar o resumo com consumo real, custo e projeção.
 
 ## Deploy
 

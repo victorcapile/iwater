@@ -7,6 +7,7 @@ import { CuriositiesPage } from './pages/CuriositiesPage'
 import { CuriosityPage } from './pages/CuriosityPage'
 import { HistoryPage } from './pages/HistoryPage'
 import { HomePage } from './pages/HomePage'
+import { HousePage } from './pages/HousePage'
 import { NewConsumptionPage } from './pages/NewConsumptionPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 
@@ -29,6 +30,7 @@ export default function App() {
         <Route element={<AppShell />}>
           <Route index element={<HomePage />} />
           <Route path="novo-consumo" element={<NewConsumptionPage />} />
+          <Route path="minha-casa" element={<HousePage />} />
           <Route path="historico" element={<HistoryPage />} />
           <Route
             path="graficos"
