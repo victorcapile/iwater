@@ -70,6 +70,7 @@ export function CuriosityPage() {
         backLabel="Categorias"
       />
 
+      <div className="mx-auto max-w-3xl">
       <section className="quote-card flex min-h-[24rem] flex-col justify-between p-7 sm:min-h-[27rem] sm:p-10">
         <div className="relative z-10 flex items-center gap-2 text-[0.7rem] font-semibold tracking-[0.18em] text-agua-100/85 uppercase">
           <Icon className="h-4 w-4" aria-hidden="true" />
@@ -129,6 +130,7 @@ export function CuriosityPage() {
           Aleatória
         </Link>
       </nav>
+      </div>
     </div>
   )
 }

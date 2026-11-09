@@ -28,7 +28,7 @@ export function HouseSnapshot({ profile, readings, bills }: HouseState) {
     hasCurrentMeter && costPerM3 > 0 ? currentMeter.m3 * costPerM3 : null
 
   return (
-    <section className="surface mb-6 p-5 sm:p-6" aria-labelledby="casa-resumo-titulo">
+    <section className="surface p-5 sm:p-6" aria-labelledby="casa-resumo-titulo">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="eyebrow">Minha casa</p>

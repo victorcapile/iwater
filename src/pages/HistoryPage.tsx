@@ -166,7 +166,7 @@ export function HistoryPage() {
             Remova um item pela lixeira; você pode desfazer em seguida.
           </p>
 
-          <div className="space-y-4">
+          <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
             {days.map((day) => {
               const status = getStatus(day.total, day.entries.length > 0)
               return (
@@ -206,7 +206,7 @@ export function HistoryPage() {
                           <Droplet className="h-4 w-4" aria-hidden="true" />
                         </span>
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-sm font-semibold">{entry.tipo}</p>
+                          <p className="text-sm font-semibold break-words">{entry.tipo}</p>
                           <p className="text-xs text-navy/45">
                             {typeof entry.duracao === 'number' && entry.duracao > 0
                               ? formatDurationHuman(entry.duracao)

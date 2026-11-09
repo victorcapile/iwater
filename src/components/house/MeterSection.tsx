@@ -103,7 +103,8 @@ export function MeterSection({ readings }: MeterSectionProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="space-y-4">
       {latestInterval ? (
         <section className="surface p-5 sm:p-6">
           <div className="flex items-start gap-3">
@@ -202,7 +203,9 @@ export function MeterSection({ readings }: MeterSectionProps) {
           Adicionar leitura
         </button>
       </form>
+      </div>
 
+      <div className="space-y-4">
       <section className="surface p-5 sm:p-6" aria-labelledby="leituras-titulo">
         <div className="flex items-end justify-between gap-3">
           <div>
@@ -273,6 +276,7 @@ export function MeterSection({ readings }: MeterSectionProps) {
           Leia apenas os números pretos do hidrômetro, que indicam metros cúbicos (m³).
           Os números vermelhos são litros e podem ser ignorados para este controle.
         </p>
+      </div>
       </div>
     </div>
   )

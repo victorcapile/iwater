@@ -107,7 +107,8 @@ export function BillSection({ bills, readings }: BillSectionProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="space-y-4">
       {bills.length > 0 ? (
         <section className="surface p-5 sm:p-6">
           <div className="flex items-start gap-3">
@@ -230,7 +231,9 @@ export function BillSection({ bills, readings }: BillSectionProps) {
           {existing ? 'Atualizar conta' : 'Salvar conta'}
         </button>
       </form>
+      </div>
 
+      <div className="space-y-4">
       <section className="surface p-5 sm:p-6" aria-labelledby="contas-titulo">
         <div className="flex items-end justify-between gap-3">
           <div>
@@ -304,6 +307,7 @@ export function BillSection({ bills, readings }: BillSectionProps) {
           A tarifa efetiva é o total da conta dividido pelo consumo em m³. Ela inclui
           água, esgoto e taxas, então pode variar de um mês para outro.
         </p>
+      </div>
       </div>
     </div>
   )

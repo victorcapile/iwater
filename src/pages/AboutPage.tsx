@@ -70,7 +70,7 @@ export function AboutPage() {
         description="A história do iWater, as pessoas que fizeram parte dela e o que mudou nesta versão."
       />
 
-      <div className="space-y-4">
+      <div className="mx-auto max-w-3xl space-y-4">
         <section className="surface p-6 sm:p-8">
           <div className="flex items-start gap-4">
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-agua-600/10 text-agua-800">
