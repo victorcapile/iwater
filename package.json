@@ -1,0 +1,41 @@
+{
+  "name": "iwater",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "iWater — acompanhe seu consumo de água de forma simples e consciente.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victorcapile/iwater.git"
+  },
+  "homepage": "https://github.com/victorcapile/iwater#readme",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@fontsource-variable/open-sans": "^5.3.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
+    "lucide-react": "^1.70.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.5",
+    "recharts": "^3.10.1",
+    "sonner": "^2.0.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.7",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^4.1.12"
+  }
+}
